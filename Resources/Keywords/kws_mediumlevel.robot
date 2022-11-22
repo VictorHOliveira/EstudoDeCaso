@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation  Common variables for all the project
+Documentation  Keywords to construct steps
 Resource  ${ROOT}/Resources/Main.robot
 
 *** Variables ***
