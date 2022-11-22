@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation  Common variables for all the project
+Documentation  Customized keywords in python
 Resource  ${ROOT}/Resources/Main.robot
 
 *** Variables ***
