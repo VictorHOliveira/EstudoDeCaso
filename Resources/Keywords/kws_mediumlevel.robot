@@ -2,9 +2,8 @@
 Documentation  Keywords to construct steps
 Resource  ${ROOT}/Resources/Main.robot
 
-*** Variables ***
-#ASSISTANT KEYWORDS
-#FAKE LIBRARY
+*** Keywords ***
+############# FAKE LIBRARY #############
 Enter Email To "${value}"
     [Documentation]    Click on element identified by "dict_register" and "value".
     ...    Generate random and faker data for the test

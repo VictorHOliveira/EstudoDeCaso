@@ -5,8 +5,7 @@ Resource  ${ROOT}/Resources/Main.robot
 *** Variables ***
 
 *** Keywords ***
-
-# GENERAL KEYWORDS OPEN/CLOSE BROWSERS
+############# OPEN/CLOSE BROWSERS #############
 Open Application
     [Arguments]  ${URL_Base}  ${BROWSER}
     [Documentation]  Test setup to open browser
@@ -15,6 +14,7 @@ Open Application
 Close Application
     Close Browser
 
+############# NAVIGATION #############
 Navigate To "${page}"
     [Documentation]    Click on element identified by "dict_pages" and "page".
     ...
@@ -27,17 +27,7 @@ Navigate To "${page}"
     ...
     Click    ${dict_pages}[${page}]
 
-Click On "${locator}"
-    [Documentation]    Click on element identified by "locator".
-    ...
-    ...    *Input Arguments:*
-    ...    | *Name* | *Description* |
-    ...    | locator | xpath of the element to click |
-    ...
-    ...    *cap eng. Expertise center*
-    ...
-    Click    ${dict_click}[${locator}]
-
+############# LOGIN AND LOGOUT #############
 Login As "${user}"
     [Documentation]    Write an "user" element username and password keys and click on login.
     ...
@@ -67,6 +57,7 @@ Logout
     ...
     Click    ${signout_button}
 
+############# CHOOSEN AND SEARCH #############
 Choose a "${locator}" of "${value}" items
     [Documentation]    Set and search an element identified by "locator" with "value"
     ...
@@ -106,6 +97,7 @@ Search for "${text}"
     Write    ${locator}    ${text}
     Click    ${search_button}
 
+############# REGISTER #############
 Registration form
     [Documentation]    Keyword for user registration
     Enter Email To "Email"
@@ -129,8 +121,8 @@ Registration form
     Enter Phone Number To "Phone Mobile"
     Enter Email To "Alias"
     Enter Password To "Password"
-#VALIDATIONS KEYWORDS
 
+############# VALIDATIONS #############
 Verify Name Of "${option}" Is Visible As "${value}"
     [Documentation]    Checks text and waits for an element identified by "option" and "value"
     ...
@@ -167,3 +159,86 @@ Verify if page contain "${locator}" visible
     ...    *cap eng. Expertise center*
     ...
     Wait Until Element Is Visible    ${dict_validations}[${locator}]
+
+############# CLICKS #############
+Click
+    [Arguments]    ${locator}
+    [Documentation]    Waits for an element identified by "locator" and clicks on it.
+    ...
+    ...    *Input Arguments:*
+    ...    | *Name*    | *Description* |
+    ...    | locator   | xpath of the element to click |
+    ...
+    ...    *cap eng. Expertise center*
+    ...
+    Wait Until Page Contains Element    ${locator}   
+    Click Element    ${locator}
+
+Click On "${locator}"
+    [Documentation]    Click on element identified by "locator".
+    ...
+    ...    *Input Arguments:*
+    ...    | *Name* | *Description* |
+    ...    | locator | xpath of the element to click |
+    ...
+    ...    *cap eng. Expertise center*
+    ...
+    Click    ${dict_click}[${locator}]
+
+############# WRITES #############
+Write
+    [Arguments]    ${locator}    ${text}
+    [Documentation]    Waits for an element identified by "locator" and writes "text" on it.
+    ...
+    ...    *Input Arguments:*
+    ...    | *Name*    | *Description* |
+    ...    | locator   | xpath of the element to write in |
+    ...    | text      | text to write |
+    ...
+    ...    *cap eng. Expertise center*
+    ...
+    Wait Until Page Contains Element    ${locator}
+    Input Text    ${locator}    ${text}
+
+Write Password
+    [Arguments]    ${locator}    ${password}
+    [Documentation]    Waits for an element identified by "locator" and the "user_password" on it.
+    ...
+    ...    *Input Arguments:*
+    ...    | *Name*    | *Description* |
+    ...    | locator   | xpath of the element to write in |
+    ...    | user      | insert password |
+    ...
+    ...    *cap eng. Expertise center*
+    ...
+    Wait Until Page Contains Element    ${locator}
+    Input Text    ${locator}    ${password}
+
+############# SCREENSHOT #############
+Take Screenshots Browser
+    [Documentation]    Setup for taking Browser screenshots
+    ...
+    ...    *cap eng. Expertise center*
+    ...
+    Run Keyword and Ignore Error    SeleniumLibrary.CapturePageScreenshot
+
+Define directory to save evidances
+    [Documentation]  Extarct tag of test, create the directory with
+    ...              where the name are the tag and define this directory to save the screenshots
+    FOR  ${tag}  IN  @{TEST TAGS}
+        ${isTC}  Run Keyword And Return Status  Should Contain  ${tag}  TC
+        IF  ${isTC} == True
+            ${TEST_ID}  Set Variable  ${tag}
+            Exit For Loop
+        END
+    END
+    ${EVIDENCE_PATH}  Set Variable  ${ROOT}\\Results\\${CURRENT_TIME}\\screenshots\\${TEST_ID}
+    Create Directory  ${EVIDENCE_PATH}
+    Set Test Variable  ${EVIDENCE_PATH}
+    Log To Console  EVIDANCES PATH: ${EVIDENCE_PATH}
+
+Take Screenshot
+    [Documentation]  Capture the screenshot in .png, rename with current time
+    ...              and save in the directory was created on keyword Define directory to save evidances
+    ${SCREENSHOT_NAME}  Get Current Date  result_format=%d%m%y_%H%M%S
+    Run Keyword and Ignore Error  Capture Page Screenshot  ${EVIDENCE_PATH}\\${SCREENSHOT_NAME}.png
